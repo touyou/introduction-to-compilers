@@ -1,23 +1,22 @@
 /*:
  - callout(Xcode issue):
- If you see the error message \
+ もし以下のようなエラーが出てきた場合は、30秒間ほどこのページを実行するために必要なファイルが全てコンパイルされるまで待ってください。 \
 `Playground execution failed: error: Introduction.xcplaygroundpage:11:17: error: use of undeclared type 'SwiftFile'` \
-wait for about 30 seconds to let the playground compile auxiliary classes that are needed for the execution in this pages. \
 I have filed this bug as [rdar://30999038](rdar://30999038)
 
  
- # Do you know how compilers work?
- Your Mac by itself cannot understand Swift code, but it can only execute very low-level *assembly* instructions like `add`, `shift` or `branch`. It doesn't know about classes or even `if` statements.
+ # コンパイラの仕組みとは？
+ Macはそれ自身ではSwiftのコードは理解できず、とても低級な`add`や`shift`、`branch`といった*アセンブリ*命令のみ実行することができます。すなわちクラスや`if`文ですらMacは知らないのです。
 
- To make your Swift programs run on your Mac, we need a program that translates Swift into assembly code. This program is called a *compiler*. The compiler is always invoked when you build a program in Xcode or when you see `Compiling` in the status bar of a Playground.
+ そのためSwiftのプログラムをMacで実行するにはSwiftをアセンブリのコードに翻訳しなくてはなりません。これを行うプログラムを*コンパイラ*と呼びます。コンパイラはXcodeでプログラムをビルドする際や、Playgroundで`Compiling`とステータスバーに出ている際に毎回実行されています。
 
- In the following pages you will have a chance to discover interactively how compilers work and which phases modern compilers go through to compile your program.
+ このページではコンパイラがどう動き、どんな過程を経て現代のコンパイラがプログラムのコンパイルをしているのかをインタラクティブに見ていきましょう。
 
- As a high-level overview, consider you have written the following Swift code:
+ たとえばこんなSwiftのコードを書いたとします:
  */
 let sourceFile: SwiftFile = #fileLiteral(resourceName: "Simple program.swift")
 /*: 
- Then the Swift compiler will *compile* the Swift code into assembly code that may look like this:
+ このSwiftのコードをSwiftのコンパイラが*コンパイル*してアセンブリコードにしたものがこのようになります:
  */
 do {
     try Compiler.compile(swiftFile: sourceFile)
@@ -27,13 +26,13 @@ do {
 /*:
  
  * callout(Discover):
- Choose different Swift programs above and see how the assembly code changes.
+ 違うSwiftのプログラムに変えてアセンブリがどのように変わるか見てみましょう。
 
  
  * note:
- To change the program to compile, double-click on “Simple Program” on top of the page
+ コンパイルするファイルを変えるにはsourceFileのところを書き換えましょう。（ダブルクリックで変えられるらしいです）
 
- [❯ Start with the lexer](Lexer)
+ [❯ Lexerから始めよう](Lexer)
  
  ---
  */

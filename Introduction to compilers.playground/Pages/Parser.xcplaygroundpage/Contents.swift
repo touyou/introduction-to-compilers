@@ -1,44 +1,44 @@
 /*:
  # Parser
  
- After lexing the source code into tokens, the *parser* parses the stream of tokens into an *abstract syntax tree (AST)*. This is a tree representation of your source code, which models the nesting that you probably see from just looking at it.
+ ソースコードをトークン列に変換した後は、これを*Parser*が*抽象構文木（AST）*というものに変換します。これは木構造でソースコードを表したものになっており、ライブビューに表示されているような構造になっています。
  */
 let sourceFile: SwiftFile = #fileLiteral(resourceName: "Simple program.swift")
 /*:
  * callout(Discover):
- Explore the AST of the different sample programs in the live view.
+ ASTを見るためにはライブビューを有効にしてください。
  
 
  * note:
- Since the `else` part has not been implemented yet below, “Program with else” will fail to compile.
+ 以下では`else`が実装されていないため、"Program with else"はコンパイルできません。
 
- In the following you see the source code for parsing `if` statements in a simplified Swift compiler:
+ 以下でシンプルにしたSwiftコンパイラの中で`if`がどのように変換されるか見てみましょう:
  */
 class MyParser: Parser {
     override func parseIfStatement() throws -> Statement {
-        // Check that the next token is indeed `if`, otherwise emit an error
+        // 次のトークンが`if`であるかどうかチェックし、違うならエラーを吐きます。
         guard nextToken == .if else {
             throw CompilationError(sourceRange: nextToken.sourceRange,
                                    errorMessage: "Expected 'if' but saw \(nextToken)")
         }
-        // Save the source range in which the `if` keyword occurred
-        // This will potentially be used later for error messages
+        // `if`のキーワードが出て来るソースコードの位置を保存します。
+        // これはこの後エラーメッセージに利用します。
         let ifRange = nextToken.sourceRange
-        // Consume the token so that we can have a look at the next one
+        // 見るトークンの位置をずらして次のトークンが見られるようにします。
         try consumeToken()
-        // Parse the if statement's condition
+        // if文の条件文を変換します。
         let condition = try parseExpression()
-        // Parse the body of the if statment
+        // if文の本体を変換します。
         let body = try parseBraceStatement()
 
         let elseBody: BraceStatement? = nil
         let elseRange: SourceRange? = nil
 
         // #-----------------------------------#
-        // # Code to parse else statement here #
+        // # ここにelse文の変換処理が入ります。      #
         // #-----------------------------------#
 
-        // Construct an if statement and return it
+        // 最後にif文の構造を返します。
         return IfStatement(condition: condition,
                            body: body,
                            elseBody: elseBody,
@@ -48,19 +48,19 @@ class MyParser: Parser {
     }
 }
 /*:
- Note that the code to parse the `else` part of the `if` statement is still missing.
+ このコードでは`else`の部分が無いままになっていることに注意してください。
 
  * callout(Experiment):
- Can you implement parsing of the `else` part similar to how the body of the `if` part gets parsed? \
-Pick the example source file “Program with else” to verify that your implementation works.
+ `else`の部分を`if`と同じように書いてみましょう。 \
+"Program with else"をコンパイルして正しく動作することを確かめてください。
 
- [View a possible solution](ParserSolution)
+ [解答例を見る](ParserSolution)
 
- After the source code has been transformed into an AST, the AST is *type checked*. This verifies that there is no type system violation in the code like trying to add an integer with a string `5 + "abc"` or invoking a function with the wrong type of argument. If this passes, the compiler can continue to the next phase.
+ ソースコードがASTに変換された後、ASTには*型検査*が行われます。これによって整数に文字を足そうとする`5 + "abc"`やメソッドを間違った型の引数で呼び出そうとするようなコードをはじくことが出来ます。型検査をクリアした場合、コンパイラは次の段階に移ります
 
- [❮ Back to the lexer](Lexer)
+ [❮ Lexerに戻る](Lexer)
 
- [❯ Continue with IR Generation](IRGeneration)
+ [❯ IR Generationに進む](IRGeneration)
  
  ---
  */

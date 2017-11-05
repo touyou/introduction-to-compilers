@@ -1,29 +1,29 @@
 /*:
- # Parser Experiment Solution
+ # Parserの練習問題の解答例
  
- A possible solution to successfully implement the parsing of the else part is to change the variables `elseBody` and `elseRange` from `let` to `var` and perform the following instead of the placeholder:
+ `elseBody`と`elseRange`を`let`から`var`に書き換えてelseの部分を以下のように解答例となります。:
  
- - Check if the next token is `else` (`nextToken == .else`)
- - If yes, retrieve the `else` token's range (`elseRange = nextToken.sourceRange`)
- - Consume the `else` token (`try consumeToken()`)
- - Parse the else body and store it (`elseBody = try parseBraceStatement()`)
+ - 次のトークンが`else`であることを確認する。 (`nextToken == .else`)
+ - もしあっていれば`else`のトークンの範囲を保存しておく。 (`elseRange = nextToken.sourceRange`)
+ - `else`のトークンの次のトークンに進む。 (`try consumeToken()`)
+ - 本体の部分を変換して保存する。 (`elseBody = try parseBraceStatement()`)
  */
 
 class MyParser: Parser {
     override func parseIfStatement() throws -> Statement {
-        // Check that the next token is indeed `if`, otherwise emit an error
+        // 次のトークンが`if`であるかどうかチェックし、違うならエラーを吐きます。
         guard nextToken == .if else {
             throw CompilationError(sourceRange: nextToken.sourceRange,
                                    errorMessage: "Expected 'if' but saw \(nextToken)")
         }
-        // Save the source range in which the `if` keyword occurred
-        // This will potentially be used later for error messages
+        // `if`のキーワードが出て来るソースコードの位置を保存します。
+        // これはこの後エラーメッセージに利用します。
         let ifRange = nextToken.sourceRange
-        // Consume the so that we can have a look at the next token
+        // 見るトークンの位置をずらして次のトークンが見られるようにします。
         try consumeToken()
-        // Parse the if statement's condition
+        // if文の条件文を変換します。
         let condition = try parseExpression()
-        // Parse the body of the if statment
+        // if文の本体を変換します。
         let body = try parseBraceStatement()
 
         // ================================== //
@@ -31,19 +31,19 @@ class MyParser: Parser {
         var elseBody: BraceStatement? = nil
         var elseRange: SourceRange? = nil
 
-        // Check if the next token is `else`
+        // 次のトークンが`else`であることを確認する
         if nextToken == .else {
-            // Retrieve the else token's source range
+            // elseのトークンの位置を保存する。
             elseRange = nextToken.sourceRange
-            // Consume the `else` token since we have handled it
+            // 次のトークンに進む。
             try consumeToken()
-            // Parse the else body
+            // else文の本体を変換する。
             elseBody = try parseBraceStatement()
         }
 
         // ================================== //
 
-        // Construct an if statement and return it
+        // 最後にif文の構造を返します。
         return IfStatement(condition: condition,
                            body: body,
                            elseBody: elseBody,
@@ -54,6 +54,6 @@ class MyParser: Parser {
 }
 
 /*:
- [❮ Back to the parser](Parser)
+ [❮ Parserに戻る](Parser)
 
  */
